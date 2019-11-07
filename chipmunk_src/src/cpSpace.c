@@ -569,6 +569,21 @@ cpSpaceRemoveConstraint(cpSpace *space, cpConstraint *constraint)
 	constraint->space = NULL;
 }
 
+void
+cpSpaceRemoveCollisionHandler(cpSpace *space, cpCollisionType a, cpCollisionType b)
+{
+	cpAssertHard(cpSpaceContainsCollisionHandler(space, a, b), "Cannot remove a collision handler that was not added to the space. (Removed twice maybe?)");
+
+	cpHashValue hash = CP_HASH_PAIR(a, b);
+	cpCollisionType types[] = { a, b };
+	cpHandle *hand = (cpHandle *)cpHashSetRemove(space->collisionHandlers, hash, types);
+
+	if(hand){
+		hand->obj = NULL;
+		cpHandleRelease(hand, hash->pooledHandles);
+	}
+}
+
 cpBool cpSpaceContainsShape(cpSpace *space, cpShape *shape)
 {
 	return (shape->space == space);
@@ -582,6 +597,13 @@ cpBool cpSpaceContainsBody(cpSpace *space, cpBody *body)
 cpBool cpSpaceContainsConstraint(cpSpace *space, cpConstraint *constraint)
 {
 	return (constraint->space == space);
+}
+
+cpBool cpSpaceContainsCollisionHandler(cpSpace *space, cpCollisionType a, cpCollisionType b)
+{
+	cpHashValue hash = CP_HASH_PAIR(a, b);
+	cpCollisionHandler *result = (cpCollisionHandler *)cpHashSetFind(space->collisionHandlers, hash, types);
+	return result != NULL;
 }
 
 //MARK: Iteration

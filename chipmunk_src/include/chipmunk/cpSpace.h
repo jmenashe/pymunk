@@ -168,6 +168,8 @@ CP_EXPORT void cpSpaceRemoveShape(cpSpace *space, cpShape *shape);
 CP_EXPORT void cpSpaceRemoveBody(cpSpace *space, cpBody *body);
 /// Remove a constraint from the simulation.
 CP_EXPORT void cpSpaceRemoveConstraint(cpSpace *space, cpConstraint *constraint);
+/// Remove a collision handler from the simulation.
+CP_EXPORT void cpSpaceRemoveCollisionHandler(cpSpace *space, cpCollisionType a, cpCollisionType b);
 
 /// Test if a collision shape has been added to the space.
 CP_EXPORT cpBool cpSpaceContainsShape(cpSpace *space, cpShape *shape);

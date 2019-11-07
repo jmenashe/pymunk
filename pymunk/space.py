@@ -291,6 +291,8 @@ class Space(PickleMixin, object):
                 self._remove_shape(o)
             elif isinstance(o, Constraint):
                 self._remove_constraint(o)
+            elif isinstance(o, CollisionHandler):
+                self._remove_collision_handler(o)
             else:
                 for oo in o:
                     self.remove(oo)
@@ -329,6 +331,13 @@ class Space(PickleMixin, object):
         """Removes a constraint from the space"""
         self._constraints.remove(constraint)
         cp.cpSpaceRemoveConstraint(self._space, constraint._constraint)
+
+    def _remove_collision_handler(self, collision_type_a, collision_type_b):
+        """Removes a collision handler from the space"""
+        self._handlers.remove(handler)
+        key = (collision_type_a, collision_type_b) 
+        del self._handlers[key]
+        cp.cpSpaceRemoveCollisionHandler(self._space, k[0], key[1])
 
     def reindex_shape(self, shape):
         """Update the collision detection data for a specific shape in the
